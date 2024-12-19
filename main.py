@@ -1,16 +1,13 @@
 def main():
     book_path = "books/frankenstein.txt"
     file_contents = get_book_text(book_path)
-    #print(file_contents)
-    #print(count_words(file_contents))
-    #print(count_unique_characters(file_contents))
-    get_report(book_path, file_contents)
+    print_report(book_path, file_contents)
 
 def count_words(text):
     words = text.split()
     return len(words)
 
-def count_unique_characters(text):
+def get_characters_dict(text):
     chars = {}
     for char in text:
         if char.lower() not in chars:
@@ -19,15 +16,38 @@ def count_unique_characters(text):
             chars[char.lower()] += 1
     return chars
 
-def get_report(book_path, text):
+def print_report(book_path, text):
     words = count_words(text)
-    chars = count_unique_characters(text)
+    chars = get_characters_dict(text)
     print(f"--- Begin report of {book_path} ---")
     print(f"{words} words found in the document\n")
+    alpha_chars = filter_alphabetic(chars)
+    dict_list = sort_by_occurrence(alpha_chars)
+    for dict in dict_list:
+        print(f"The '{dict["key"]}' character was found {dict["value"]} times")
+    print("--- End report ---")
+
+def get_dict_list(dict):
+    dict_list = []
+    for key in dict:
+        tmp = {"key": key, "value": dict[key]}
+        dict_list.append(tmp)
+    return dict_list
+
+def filter_alphabetic(chars):
+    alphabetic_dict = {}
     for char in chars:
         if char.isalpha():
-            print(f"The {char} character was found {chars[char]} times")
-    print("--- End report ---")
+            alphabetic_dict[char] = chars[char]
+    return alphabetic_dict
+
+def sort_by_occurrence(chars):
+    dict_list = get_dict_list(chars)
+    dict_list.sort(reverse=True, key=sort_on_value)
+    return dict_list
+
+def sort_on_value(dict):
+    return dict["value"]
 
 def get_book_text(path):
     with open(path) as f:
