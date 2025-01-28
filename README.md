@@ -1,2 +1,2 @@
 # bookbot
-Boot.dev "Build a Bookbot" course repository
+Boot.dev project to build a CLI application that does static analysis on text files.
